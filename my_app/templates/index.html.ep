@@ -1,0 +1,53 @@
+<!-- Разметка страницы, где пользователь вводит данные--> 
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Прогноз погоды</title>
+</head>
+<body>
+    <center><h1>Узнай погоду</h1>
+            <p>Введите данные:</p>
+    </center>
+    <form method="post" action="/weather">
+        <center>
+            <label for="latitude">Широта:</label>
+            <input type="text" name="latitude" placeholder="Введите широту">
+            <label for="longitude">Долгота:</label>
+            <input type="text" name="longitude" placeholder="Введите долготу">
+            <p>Или введите название города:</p>
+            <input type="text" name="city" placeholder="Введите название города">
+            
+            <p></p>
+
+            <label for="temper">Единицы измерения температуры:</label>
+            <select name="temperature">
+                <option value="celsius">°C</option>
+                <option value="fahrenheit">℉</option>
+            </select>
+            <p></p>
+            <label for="wind">Единицы измерения скорости ветра:</label>
+            <select name="wind_speed">
+                <option value="kmh">км/ч</option>
+                <option value="ms">м/с</option>
+                <option value="mph">миль/ч</option>
+            </select>
+            <p></p>
+            <input type="submit" value="Узнать погоду">
+        </center>
+    </form>
+    <!-- Вывод результата. Проверяем существует ли значение weather в хранилище шаблона stash--> 
+    % if (stash 'weather') {
+        <center>
+        <h2>Вот что удалось найти</h2>
+        <!-- Вставляем значение температуры из данных погоды, полученных через api. Извлекаем первую запись температуры. Вставляем единицу измерения температуры, указанных пользователем--> 
+        <p>Температура: <%= stash('weather')->{hourly}->{temperature_2m}[0] %> <%= stash('temp_unit') %></p>
+        <!-- Вставляем значение скорости ветра из данных погоды, полученных через api. Извлекаем первую запись скорости ветра. Вставляем единицу измерения скорости ветра, указанных пользователем--> 
+        <p>Скорость ветра: <%= stash('weather')->{hourly}->{wind_speed_10m}[0] %> <%= stash('wind_speed_unit') %></p>
+        <!--Если значения weather не существует - error -->
+    % } elsif (stash 'error') {
+        <p><%= stash('error') %></p>
+    % }
+    </center>
+</body>
+</html>

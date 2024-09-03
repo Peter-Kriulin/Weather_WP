@@ -26,8 +26,8 @@ post '/weather' => sub {
         my $validation = $validator->validation; # Создание объекта валидации
 
         $validation->input({ latitude => $latitude, longitude => $longitude });# Добавление данных для валидации
-        $validation->required('latitude')->like(qr/^-?\d+(\.\d+)?$/);# Определение правил валидации для широты
-        $validation->required('longitude')->like(qr/^-?\d+(\.\d+)?$/);# Определение правил валидации для долготы
+        $validation->required('latitude')->like(qr/^-?(?:[0-8]?\d(?:\.\d+)?|90(?:\.0+)?)$/);# Определение правил валидации для широты
+        $validation->required('longitude')->like(qr/^-?(?:[0-9]{1,2}|1[0-7]\d|180)(?:\.\d+)?$/);# Определение правил валидации для долготы
 
         if ($validation->has_error) {
             return $c->render(template => 'index', error => 'Error: неверный тип координат!', weather => undef);# Если False - Ошибка ввода координат!
@@ -46,7 +46,7 @@ post '/weather' => sub {
             $latitude = $geo_res->json->{results}[0]{latitude};  # Извлекаем полученные значения для широты
             $longitude = $geo_res->json->{results}[0]{longitude}; # Извлекаем полученные значения для долготы
         } else {
-            return $c->render(template => 'index', error => 'Error: город не найден или не существует!', weather => undef); # Если не удалось извлечь данные "Ошибка: город не найден или его не существует!"
+            return $c->render(template => 'index', error => 'Error: город не найден или не существует!', weather => undef); # Если не удалось извлечь данные "Error: город не найден или не существует!"
         }
     }
     # Если определена широта и долгота
@@ -58,7 +58,7 @@ post '/weather' => sub {
             my $weather_data = $weather_res->json;
             $c->render(template => 'index', weather => $weather_data, temp_unit => $temp_unit, wind_speed_unit => $wind_speed_unit);# Если True - извлекаем данные из погодного api
         } else {
-            $c->render(template => 'index', error => 'Error: не удалось получить данные о погоде!', weather => undef);# Если False -'Ошибка: не удалось получить данные о погоде!'
+            $c->render(template => 'index', error => 'Error: не удалось получить данные о погоде!', weather => undef);# Если False -'Error: не удалось получить данные о погоде!'
         }
     }
 };

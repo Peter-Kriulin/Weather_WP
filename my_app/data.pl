@@ -3,16 +3,15 @@ use warnings;
 use Mojolicious::Lite;
 use Mojo::UserAgent;
 use Mojolicious::Validator;
+use Mojolicious::Lite -signatures;
 
 # Индексный роут
-get '/' => sub {
-    my $c = shift;
+get '/' => sub ($c) {
     $c->render(template => 'index', weather => undef, error => undef);
 };
 
 # Обработка данных от пользователя
-post '/weather' => sub {
-    my $c = shift; 
+post '/weather' => sub ($c) {
 
     my $latitude = $c->param('latitude');   # Получение значения широты
     my $longitude = $c->param('longitude'); # Получение значения долготы

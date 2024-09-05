@@ -1,6 +1,5 @@
 use strict;
 use warnings;
-use Mojolicious::Lite;
 use Mojo::UserAgent;
 use Mojolicious::Validator;
 use Mojolicious::Lite -signatures;
